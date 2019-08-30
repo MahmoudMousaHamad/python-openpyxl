@@ -43,7 +43,7 @@ for i in range(1, max_row + 1):
         cell = sheet.cell(row = i, column = j)
         cell_val = cell.value
         if cell_val:
-            if "Sector" in cell_val:
+            if "Sector" in cell_val and "CEO" not in cell_val:
                 current_sector = cell_val
                 pass
             regex = re.compile(r'^[A-Z][0-9]{1,2}?$')
@@ -82,12 +82,17 @@ fc = open("case_statements.txt", "a")
 
 fa.write("<div class='et_pb_module et_pb_accordion et_pb_accordion_0'>\n")
 
+elemets_counter = 0
+
 for sector, pricings_list in pricings.items():
-    fa.write("<div class='et_pb_toggle et_pb_module et_pb_accordion_item et_pb_accordion_item_1  et_pb_toggle_close'>\n")
+    elemets_counter += 1
+    fa.write(f"<div class='et_pb_toggle et_pb_module et_pb_accordion_item et_pb_accordion_item_{elemets_counter}  et_pb_toggle_close'>\n")
     fa.write(f"<h5 class='et_pb_toggle_title'>{sector}</h5>\n")
     fa.write("<div class='et_pb_toggle_content clearfix'>\n")
     for i in range(0, len(pricings_list)):
+        fa.write("<div>\n")
         fa.write(pricings_list[i].generate_anchor_element() + '\n')
+        fa.write("</div>\n")
         fc.write(pricings_list[i].generate_case_statement() + '\n')
     fa.write("</div>\n")
     fa.write("</div>\n")
