@@ -55,3 +55,22 @@ for i in range(1, max_row + 1):
         pricings.append(pricing)
         print(pricing.generate_anchor_element())
     print('\n')
+
+# Write to files
+fa = open("anchor_elements.txt", "w")
+fa.write("Anchor Elements \n")
+fa.close()
+
+fc = open("case_statements.txt", "w")
+fc.write("Case Statements \n")
+fc.close()
+
+fa = open("anchor_elements.txt", "a")
+fc = open("case_statements.txt", "a")
+
+for i in range(0, len(pricings)):
+    fa.write(pricings[i].generate_anchor_element() + '\n')
+    fc.write(pricings[i].generate_case_statement() + '\n')
+
+fa.close()
+fc.close()
