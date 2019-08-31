@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 import re
 import base64
+import uuid
 
 class Pricing:
     def __init__(self, code, encoded_code, title, kind, price):
@@ -12,12 +13,12 @@ class Pricing:
     
     def generate_anchor_element(self):
         if self.kind == "CEO":
-            return f'<a href="/entry-form-executives/?sub_sector={self.title}&code={self.encoded_code}">{self.title}</a>'
+            return f'<a href="/entry-form-executives/?order_id={uuid.uuid4()}&sub_sector={self.title}&code={self.encoded_code}">{self.title}</a>'
         else:
-            return f'<a href="/entry-form-organizations/?sub_sector={self.title}&code={self.encoded_code}">{self.title}</a>'
+            return f'<a href="/entry-form-organizations/?order_id={uuid.uuid4()}&sub_sector={self.title}&code={self.encoded_code}">{self.title}</a>'
 
     def generate_case_statement(self):
-        return f"case: '{self.code}': \n price = {self.price}; \n break; \n"
+        return f"case '{self.code}': price = {self.price}; break;"
 
 
 
@@ -43,7 +44,7 @@ for i in range(1, max_row + 1):
         cell = sheet.cell(row = i, column = j)
         cell_val = cell.value
         if cell_val:
-            if "Sector" in cell_val and "CEO" not in cell_val:
+            if "Sector" in cell_val and "CEO" not in cell_val and "Chairman" not in cell_val:
                 current_sector = cell_val
                 pass
             regex = re.compile(r'^[A-Z][0-9]{1,2}?$')
@@ -70,11 +71,9 @@ for i in range(1, max_row + 1):
 
 # Write to files
 fa = open("anchor_elements.html", "w")
-fa.write("Anchor Elements \n")
 fa.close()
 
 fc = open("case_statements.txt", "w")
-fc.write("Case Statements \n")
 fc.close()
 
 fa = open("anchor_elements.html", "a")
@@ -93,7 +92,7 @@ for sector, pricings_list in pricings.items():
         fa.write("<div>\n")
         fa.write(pricings_list[i].generate_anchor_element() + '\n')
         fa.write("</div>\n")
-        fc.write(pricings_list[i].generate_case_statement() + '\n')
+        fc.write(pricings_list[i].generate_case_statement())
     fa.write("</div>\n")
     fa.write("</div>\n")
     #fa.write(pricings[i].generate_anchor_element() + '\n')
