@@ -13,9 +13,9 @@ class Pricing:
     
     def generate_anchor_element(self):
         if self.kind == "CEO":
-            return f'<a href="/entry-form-executives/?order_id={uuid.uuid4()}&sub_sector={self.title}&code={self.encoded_code}">{self.title}</a>'
+            return f'<a href="/entry-form-executives/?sub_sector={self.title}&code={self.encoded_code}">{self.title}</a>'
         else:
-            return f'<a href="/entry-form-organizations/?order_id={uuid.uuid4()}&sub_sector={self.title}&code={self.encoded_code}">{self.title}</a>'
+            return f'<a href="/entry-form-organizations/?sub_sector={self.title}&code={self.encoded_code}" target="_blank">{self.title}</a>'
 
     def generate_case_statement(self):
         return f"case '{self.code}': price = {self.price}; break;"
